@@ -1,17 +1,17 @@
 import { Link } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Row from 'react-bootstrap/Row';
+//import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 //import Table from 'react-bootstrap/Table';
 //import Figure from 'react-bootstrap/Figure';
-import { useHistory } from 'react-router-dom';
+//import { useHistory } from 'react-router-dom';
 import { useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import businesses from '../data';
 
 function Home(){
-    const history = useHistory();
+    //const history = useHistory();
     const [business, setBusiness] = useState('');
     const [location, setLoc] = useState('');
     const [searchResult, setSearchResult] = useState([]);
