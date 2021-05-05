@@ -9,6 +9,7 @@ import Col from 'react-bootstrap/Col';
 import { useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import businesses from '../data';
+import api from '../api';
 
 function Home(){
     //const history = useHistory();
@@ -17,6 +18,7 @@ function Home(){
     const [searchResult, setSearchResult] = useState([]);
     const [deleted, setDeleted] = useState(false);
     const [updated, setUpdated] = useState(false);
+    const [places, setPLaces] = useState([]);
 
     let searchSubmit = () => {
         let x = businesses;
@@ -52,6 +54,14 @@ function Home(){
         setUpdated(true);
         event.preventDefault();
     }
+
+    useEffect(() => {
+        if(places.length === 0) {
+            api.getPlaces()
+            .then(x => setPlaces(x))
+            .catch(e => console.log(e));
+        }
+    })
     
     return (
         <div>

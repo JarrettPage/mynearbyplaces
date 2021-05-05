@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 function Login() {
     const history = useHistory();
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPass] = useState('');
 
@@ -13,6 +14,10 @@ function Login() {
             return;
         }
         history.push('/');
+    }
+
+    let onNameChange = (event) => {
+        setUsername(event.target.value);
     }
 
     let onEmailChange = (event) => {
@@ -25,6 +30,10 @@ function Login() {
 
     return (
         <Form onSubmit={loginSubmit}>
+            <Form.Group controlId="formBasicName">
+                <Form.Label>Username</Form.Label>
+                <Form.Control type="username" placeholder="Enter username" onChange={onNameChange}/>
+            </Form.Group>
             <Form.Group controlId="formBasicEmail">
                 <Form.Label>Email address</Form.Label>
                 <Form.Control type="email" placeholder="Enter email" onChange={onEmailChange}/>
