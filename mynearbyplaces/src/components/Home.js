@@ -49,6 +49,17 @@ function Home(){
         setUpdated(true);
         event.preventDefault();
     }
+
+    let formatReview = (review) => {
+        let s = review.comment;
+        if(review.rating != null){
+            s = s + ' ' + review.rating + ' ';
+        }
+        if(review.customer != null){
+            s = s + ' ' + review.customer;
+        }
+        return s;
+    }
     /*
     useEffect(() => {
         if(places.length === 0) {
@@ -82,8 +93,8 @@ function Home(){
                 <Card.Header>{result.name}</Card.Header>
                 <Card.Body>
                     <Card.Title>{result.location}</Card.Title>
-                    {result.reviews.map(r => 
-                        <Card.Text>{r.comment + ' ' + r.rating}</Card.Text>)}
+                    {result.reviews.filter(x => x.comment != null).map(r => 
+                        <Card.Text>{formatReview(r)}</Card.Text>)}
                     <Form onSubmit={(event) => updateInfo(event, result.name)}>
                         <h4>If there is something wrong with the information, please fix it.</h4>
                         <Form.Control placeholder="New Name" name="newName" />
