@@ -2,25 +2,24 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 //import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import businesses from '../data';
+//import businesses from '../data';
 import { useState } from 'react';
 import Card from 'react-bootstrap/Card';
+import api from '../api';
 
-function Review(){
+function Review(props){
+    //let apiHost = 'https://jarrettpage-nearbyplaces-api.herokuapp.com'
+
     const [business, setBusiness] = useState('');
     const [location, setLoc] = useState('');
     const [searchResult, setSearchResult] = useState([]);
-    const [reviewAdded, setReviewAdded] = useState(false);
+    //const [review, setReview] = useState('');
+    //const [reviewAdded, setReviewAdded] = useState(false);
 
     let searchSubmit = () => {
-        let x = businesses;
-        if(business.length > 0){
-            x = businesses.filter(b => b.name.includes(business));
-        }
-        if(location.length > 0){
-            x = x.filter(b => b.location.includes(location));
-        }
-        setSearchResult(x);
+        api.searchPlaces(business, location)
+        .then(x => setSearchResult(x))
+        .catch(e => console.log(e));
     }
 
     let onBusinessChange = (event) => {
@@ -32,13 +31,27 @@ function Review(){
     }
 
     let addReview = (event, businessName) => {
-        let x = businesses.find(b => b.name === businessName);
-        if(x){
-            x.reviews.push(event.target.review.value);
-        }
-        setReviewAdded(true);
+        let username = localStorage.getItem('username');
+        api.addReview(businessName, event.target.review.value, event.target.rating.value, username)
+        .then(() => {console.log('The review was added.'); searchSubmit()})
+        .catch(e => console.log(e));
+        //console.log(event.target.rating.value);
         event.preventDefault();
+        
+        
     }
+    
+    let formatReview = (review) => {
+        let s = review.comment;
+        if(review.rating != null){
+            s = s + ' ' + review.rating + ' ';
+        }
+        if(review.customer != null){
+            s = s + ' ' + review.customer;
+        }
+        return s;
+    }
+    
 
     return (
         <div>
@@ -64,15 +77,24 @@ function Review(){
                 <Card.Body>
                     <Card.Text>{result.location}</Card.Text>
                     <Form onSubmit={(event) => addReview(event, result.name)}>
-                        <Form.Control placeholder="Add a Review" name="review" />
-                        <Button variant="primary" type="submit">
-                            Add Review
-                        </Button>
+                        <Form.Row>
+                            <Col>
+                                <Form.Control placeholder="Add a Review" name="review" />
+                            </Col>
+                            <Col>
+                                <Form.Control placeholder="Add a Rating" name="rating" />  
+                            </Col>
+                            <Col>
+                                <Button variant="primary" type="submit">
+                                    Add Review
+                                </Button>
+                            </Col>
+                        </Form.Row>
                     </Form>
                 </Card.Body>
                 <Card.Footer>
-                    {result.reviews.map(r => 
-                        <Card.Text>{r}</Card.Text>)}
+                    {result.reviews.filter(x => x.comment != null).map(r => 
+                        <Card.Text>{formatReview(r)}</Card.Text>)}
                 </Card.Footer>
         </Card>)}
         </div>

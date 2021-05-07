@@ -3,21 +3,22 @@ import Button from 'react-bootstrap/Button';
 import { useHistory } from 'react-router-dom';
 import { useState } from 'react';
 
-function Login() {
+function Login(props) {
     const history = useHistory();
-    const [username, setUsername] = useState('');
+    const [user, setUser] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPass] = useState('');
 
     let loginSubmit = () => {
-        if(email.trim().length === 0 || password.trim().length === 0){
+        if(user.trim().length === 0 || email.trim().length === 0 || password.trim().length === 0){
             return;
         }
+        props.onLoggedIn(user);
         history.push('/');
     }
 
     let onNameChange = (event) => {
-        setUsername(event.target.value);
+        setUser(event.target.value);
     }
 
     let onEmailChange = (event) => {
@@ -32,7 +33,7 @@ function Login() {
         <Form onSubmit={loginSubmit}>
             <Form.Group controlId="formBasicName">
                 <Form.Label>Username</Form.Label>
-                <Form.Control type="username" placeholder="Enter username" onChange={onNameChange}/>
+                <Form.Control type="user" placeholder="Enter username" onChange={onNameChange}/>
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
                 <Form.Label>Email address</Form.Label>

@@ -6,7 +6,7 @@ import Col from 'react-bootstrap/Col';
 //import Table from 'react-bootstrap/Table';
 //import Figure from 'react-bootstrap/Figure';
 //import { useHistory } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
 import businesses from '../data';
 import api from '../api';
@@ -18,17 +18,12 @@ function Home(){
     const [searchResult, setSearchResult] = useState([]);
     const [deleted, setDeleted] = useState(false);
     const [updated, setUpdated] = useState(false);
-    const [places, setPLaces] = useState([]);
+    const [places, setPlaces] = useState([]);
 
     let searchSubmit = () => {
-        let x = businesses;
-        if(business.length > 0){
-            x = businesses.filter(b => b.name.toLowerCase().includes(business.toLowerCase()));
-        }
-        if(location.length > 0){
-            x = x.filter(b => b.location.toLowerCase().includes(location.toLowerCase()));
-        }
-        setSearchResult(x);
+        api.searchPlaces(business, location)
+        .then(x => setSearchResult(x))
+        .catch(e => console.log(e));
     }
 
     let onBusinessChange = (event) => {
@@ -54,7 +49,7 @@ function Home(){
         setUpdated(true);
         event.preventDefault();
     }
-
+    /*
     useEffect(() => {
         if(places.length === 0) {
             api.getPlaces()
@@ -62,7 +57,7 @@ function Home(){
             .catch(e => console.log(e));
         }
     })
-    
+    */
     return (
         <div>
         <Form onSubmit={searchSubmit}>
@@ -88,7 +83,7 @@ function Home(){
                 <Card.Body>
                     <Card.Title>{result.location}</Card.Title>
                     {result.reviews.map(r => 
-                        <Card.Text>{r}</Card.Text>)}
+                        <Card.Text>{r.comment + ' ' + r.rating}</Card.Text>)}
                     <Form onSubmit={(event) => updateInfo(event, result.name)}>
                         <h4>If there is something wrong with the information, please fix it.</h4>
                         <Form.Control placeholder="New Name" name="newName" />

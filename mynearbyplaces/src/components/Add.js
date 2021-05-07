@@ -15,7 +15,7 @@ function Add(props) {
     let addBusiness = () => {
         //let business = {name: name, location: loc, reviews: []};
         //businesses.push(business);
-        let place = {name: name, address: loc};
+        let place = {name: name, location: loc};
         api.addPlace(place)
         .then(() => {
             setMessage(`The place ${name} was added.`);
@@ -34,6 +34,8 @@ function Add(props) {
     }
 
     return (
+        <div>
+            {message.length !== 0 ? message : ''}
         <Form onSubmit={addBusiness}>
             <h2>What business do you wish to add?</h2>
             <Form.Row>
@@ -50,6 +52,7 @@ function Add(props) {
                 </Col>
             </Form.Row>
         </Form>
+        </div>
     )
 }
 
